@@ -30,17 +30,17 @@ public class BoxModel extends RenderModel {
 	}
 
 	@Override
-	public void render(GraphicsContext ctx, Camera cam, double x, double y, double z) {
+	public void render(GraphicsContext ctx, Camera cam, Perspective perspective, double x, double y, double z) {
 		Vector3D pos = new Vector3D(x, y, z);
 		ctx.setStroke(Color.BLACK);
-		switch (cam.getPerspective().getOptimizationLevel()) {
+		switch (perspective.getOptimizationLevel()) {
 		case NONE:
 			//Left side
 			{
-				Vector2D ul = cam.toScreenPosition(pos.clone().add(0, getHeight(), 0)).round();
-				Vector2D ur = cam.toScreenPosition(pos.clone().add(0, getHeight(), getLength())).round();
-				Vector2D lr = cam.toScreenPosition(pos.clone().add(0, 0, getLength())).round();
-				Vector2D ll = cam.toScreenPosition(pos.clone().add(0, 0, 0)).round();
+				Vector2D ul = perspective.toScreenPosition(cam, pos.clone().add(0, getHeight(), 0)).round();
+				Vector2D ur = perspective.toScreenPosition(cam, pos.clone().add(0, getHeight(), getLength())).round();
+				Vector2D lr = perspective.toScreenPosition(cam, pos.clone().add(0, 0, getLength())).round();
+				Vector2D ll = perspective.toScreenPosition(cam, pos.clone().add(0, 0, 0)).round();
 				
 				ctx.setEffect(new PerspectiveTransform(ul.getX(), ul.getY(), ur.getX(), ur.getY(), lr.getX(), lr.getY(), ll.getX(), ll.getY()));
 				ctx.drawImage(getLeft(), ul.getX(), ul.getY());
@@ -51,10 +51,10 @@ public class BoxModel extends RenderModel {
 			}
 			//Left side
 			{
-				Vector2D ul = cam.toScreenPosition(pos.clone().add(getWidth(), getHeight(), 0)).round();
-				Vector2D ur = cam.toScreenPosition(pos.clone().add(getWidth(), getHeight(), getLength())).round();
-				Vector2D lr = cam.toScreenPosition(pos.clone().add(getWidth(), 0, getLength())).round();
-				Vector2D ll = cam.toScreenPosition(pos.clone().add(getWidth(), 0, 0)).round();
+				Vector2D ul = perspective.toScreenPosition(cam, pos.clone().add(getWidth(), getHeight(), 0)).round();
+				Vector2D ur = perspective.toScreenPosition(cam, pos.clone().add(getWidth(), getHeight(), getLength())).round();
+				Vector2D lr = perspective.toScreenPosition(cam, pos.clone().add(getWidth(), 0, getLength())).round();
+				Vector2D ll = perspective.toScreenPosition(cam, pos.clone().add(getWidth(), 0, 0)).round();
 				
 				ctx.setEffect(new PerspectiveTransform(ul.getX(), ul.getY(), ur.getX(), ur.getY(), lr.getX(), lr.getY(), ll.getX(), ll.getY()));
 				ctx.drawImage(getLeft(), ul.getX(), ul.getY());
@@ -65,10 +65,10 @@ public class BoxModel extends RenderModel {
 			}
 			//Front side
 			{
-				Vector2D ul = cam.toScreenPosition(pos.clone().add(0, getHeight(), getLength())).round();
-				Vector2D ur = cam.toScreenPosition(pos.clone().add(getWidth(), getHeight(), getLength())).round();
-				Vector2D lr = cam.toScreenPosition(pos.clone().add(getWidth(), 0, getLength())).round();
-				Vector2D ll = cam.toScreenPosition(pos.clone().add(0, 0, getLength())).round();
+				Vector2D ul = perspective.toScreenPosition(cam, pos.clone().add(0, getHeight(), getLength())).round();
+				Vector2D ur = perspective.toScreenPosition(cam, pos.clone().add(getWidth(), getHeight(), getLength())).round();
+				Vector2D lr = perspective.toScreenPosition(cam, pos.clone().add(getWidth(), 0, getLength())).round();
+				Vector2D ll = perspective.toScreenPosition(cam, pos.clone().add(0, 0, getLength())).round();
 				
 				ctx.setEffect(new PerspectiveTransform(ul.getX(), ul.getY(), ur.getX(), ur.getY(), lr.getX(), lr.getY(), ll.getX(), ll.getY()));
 				ctx.drawImage(getFront(), ul.getX(), ul.getY());
@@ -79,10 +79,10 @@ public class BoxModel extends RenderModel {
 			}
 			//Top side
 			{
-				Vector2D ul = cam.toScreenPosition(pos.clone().add(0, getHeight(), 0)).round();
-				Vector2D ur = cam.toScreenPosition(pos.clone().add(getWidth(), getHeight(), 0)).round();
-				Vector2D lr = cam.toScreenPosition(pos.clone().add(getWidth(), getHeight(), getLength())).round();
-				Vector2D ll = cam.toScreenPosition(pos.clone().add(0, getHeight(), getLength())).round();
+				Vector2D ul = perspective.toScreenPosition(cam, pos.clone().add(0, getHeight(), 0)).round();
+				Vector2D ur = perspective.toScreenPosition(cam, pos.clone().add(getWidth(), getHeight(), 0)).round();
+				Vector2D lr = perspective.toScreenPosition(cam, pos.clone().add(getWidth(), getHeight(), getLength())).round();
+				Vector2D ll = perspective.toScreenPosition(cam, pos.clone().add(0, getHeight(), getLength())).round();
 				
 				ctx.setEffect(new PerspectiveTransform(ul.getX(), ul.getY(), ur.getX(), ur.getY(), lr.getX(), lr.getY(), ll.getX(), ll.getY()));
 				ctx.drawImage(getTop(), ul.getX(), ul.getY());
@@ -95,47 +95,30 @@ public class BoxModel extends RenderModel {
 		case FULL:
 			if ((cam.getRotationX() + 45) % 180 > 90) {
 				//Top
-				Vector2D ul = cam.toScreenPosition(pos.clone().add(0, getHeight(), 0)).round();
+				Vector2D ul = perspective.toScreenPosition(cam, pos.clone().add(0, getHeight(), 0)).round();
 				ctx.drawImage(top, ul.getX(), ul.getY());
 			}
 			else {
 				//Front
-				Vector2D ul = cam.toScreenPosition(pos.clone().add(0, getHeight(), getLength())).round();
+				Vector2D ul = perspective.toScreenPosition(cam, pos.clone().add(0, getHeight(), getLength())).round();
 				ctx.drawImage(top, ul.getX(), ul.getY());
 			}
 			break;
 		case ONLY_YZ:
 			//Top
 			{
-				Vector2D ul = cam.toScreenPosition(pos.clone().add(0, getHeight(), 0)).round();
-				Vector2D lr = cam.toScreenPosition(pos.clone().add(getWidth(), getHeight(), getLength())).round();
+				Vector2D ul = perspective.toScreenPosition(cam, pos.clone().add(0, getHeight(), 0)).round();
+				Vector2D lr = perspective.toScreenPosition(cam, pos.clone().add(getWidth(), getHeight(), getLength())).round();
 				ctx.drawImage(top, ul.getX(), ul.getY(), lr.getX() - ul.getX(), lr.getY() - lr.getY());
 			}
 			//Front
 			{
-				Vector2D ul = cam.toScreenPosition(pos.clone().add(0, getHeight(), getLength())).round();
-				Vector2D lr = cam.toScreenPosition(pos.clone().add(getWidth(), 0, getLength())).round();
+				Vector2D ul = perspective.toScreenPosition(cam, pos.clone().add(0, getHeight(), getLength())).round();
+				Vector2D lr = perspective.toScreenPosition(cam, pos.clone().add(getWidth(), 0, getLength())).round();
 				ctx.drawImage(top, ul.getX(), ul.getY(), lr.getX() - ul.getX(), lr.getY() - lr.getY());
 			}
 			break;
 		}
-		
-//		double relX = x - cam.getX();
-//		double relY = cam.getHeight() - (y - cam.getY());
-//		double relZ = z - cam.getZ();
-//		
-//		double startY = Math.round(cam.mergeYAndZ(relY, relZ));
-//		double topHeight = Math.round(getLength() * cam.getZMultiplier());
-//		double frontHeight = Math.round(getHeight() * cam.getYMultiplier());
-		
-//		if (frontHeight >= 0) {
-//			ctx.drawImage(top, relX, startY, getWidth(), topHeight);
-//			ctx.drawImage(front, relX, startY + topHeight, getWidth(), frontHeight);
-//		}
-//		else {
-//			ctx.drawImage(front, relX, startY, getWidth(), frontHeight);
-//			ctx.drawImage(top, relX, startY + frontHeight, getWidth(), topHeight);
-//		}
 	}
 
 	public Image getFront() {

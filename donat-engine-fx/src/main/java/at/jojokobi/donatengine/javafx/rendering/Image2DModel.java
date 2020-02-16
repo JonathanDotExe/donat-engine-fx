@@ -24,7 +24,7 @@ public class Image2DModel extends RenderModel{
 	}
 
 	@Override
-	public void render(GraphicsContext ctx, Camera cam, double x, double y, double z) {
+	public void render(GraphicsContext ctx, Camera cam, Perspective perspective, double x, double y, double z) {
 //		double relX = x - cam.getX();
 //		double relY = cam.getHeight() - (y - cam.getY());
 //		double relZ = z - cam.getZ();
@@ -32,8 +32,10 @@ public class Image2DModel extends RenderModel{
 //		ctx.drawImage(image, relX, cam.mergeYAndZ(relY, relZ));
 		
 		Vector3D pos = new Vector3D(x, y + getHeight(), z);
-		Vector2D renderPos = cam.toScreenPosition(pos).round();
+		Vector2D renderPos = perspective.toScreenPosition(cam, pos).round();
 		ctx.drawImage(image, renderPos.getX(), renderPos.getY(), width, height);
+		
+		
 	}
 
 	public Image getImage() {

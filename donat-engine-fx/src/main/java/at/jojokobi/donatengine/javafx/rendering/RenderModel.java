@@ -5,7 +5,7 @@ import javafx.scene.canvas.GraphicsContext;
 
 public abstract class RenderModel {
 	
-	public abstract void render (GraphicsContext ctx, Camera cam, double x, double y, double z);
+	public abstract void render (GraphicsContext ctx, Camera cam, Perspective perspective, double x, double y, double z);
 	
 	public abstract double getWidth ();
 	
