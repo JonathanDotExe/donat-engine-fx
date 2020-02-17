@@ -30,11 +30,8 @@ public class DefaultRenderer implements Renderer {
 		putRenderer(new ImageRenderer());
 		putRenderer(new ModelRenderer());
 		putRenderer(new ModelShadowRenderer());
-		putRenderer(new RectRenderer());
-		putRenderer(new ScreenLineRenderer());
-		putRenderer(new ScreenRectRenderer());
-		putRenderer(new ScreenTextRenderer());
-		putRenderer(new TextRenderer());
+		putRenderer(new CanvasRenderer());
+		putRenderer(new ScreenCanvasRenderer());
 	}
 
 	@Override
