@@ -27,9 +27,12 @@ import javafx.scene.media.Media;
 import javafx.stage.Stage;
 
 public abstract class GameApplication extends Application{
+	
+	private Game game;
 
 	@Override
 	public void start(Stage stage) throws Exception {
+		initApplication();
 		//Init Platform
 		JavaFXPlatform platform = new JavaFXPlatform();
 		GamePlatform.initialize(platform);
@@ -53,11 +56,11 @@ public abstract class GameApplication extends Application{
 		}
 		//Load Sounds
 		for (var s : sounds.getSounds().entrySet()) {
-			ressourceHandler.putMedia(s.getKey(), new Media(getGameClass().getResource(s.getValue().getPath()).toURI().toString()));
+			ressourceHandler.putMedia(s.getKey(), new Media(getRessourceRoot().getResource("/" + s.getValue().getPath()).toURI().toString()));
 		}
 		//Load Images
 		for (var i : images.getImages().entrySet()) {
-			ressourceHandler.putImage(i.getKey(), new Image(getGameClass().getResourceAsStream(i.getValue().getPath())));
+			ressourceHandler.putImage(i.getKey(), new Image(getRessourceRoot().getResourceAsStream("/" + i.getValue().getPath())));
 		}
 		//Load Models
 		for (var m : models.getModels().entrySet()) {
@@ -83,14 +86,22 @@ public abstract class GameApplication extends Application{
 	
 	protected abstract void putControls (SceneInput input);
 	
-	protected abstract Class<? extends Game> getGameClass();
+	protected abstract Class<?> getRessourceRoot();
 	
 	protected abstract Game createGame (AudioSystem system, Input input, GameView view);
 	
 	protected abstract int getUpdatesPerSecond ();
 	
+	protected abstract void initApplication();
+	
 	protected Renderer createRenderer (RessourceHandler ressourceHandler) {
 		return new DefaultRenderer(ressourceHandler, 32);
+	}
+	
+	@Override
+	public void stop() throws Exception {
+		super.stop();
+		game.stopGame();
 	}
 
 }

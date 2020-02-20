@@ -34,7 +34,7 @@ public class ModelEntry {
 			model = new BoxModel(handler.getImage(faces.get("front")), handler.getImage(faces.get("right")), handler.getImage(faces.get("left")), handler.getImage(faces.get("top")));
 			break;
 		case IMAGE:
-			model = new Image2DModel(handler.getImage(faces.get("image")));
+			model = new Image2DModel(handler.getImage(faces.get("front")));
 			break;
 		}
 		
