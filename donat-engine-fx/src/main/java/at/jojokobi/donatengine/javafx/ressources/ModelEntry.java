@@ -7,6 +7,7 @@ import at.jojokobi.donatengine.javafx.RessourceHandler;
 import at.jojokobi.donatengine.javafx.rendering.BoxModel;
 import at.jojokobi.donatengine.javafx.rendering.Image2DModel;
 import at.jojokobi.donatengine.javafx.rendering.RenderModel;
+import javafx.scene.image.Image;
 
 public class ModelEntry {
 	
@@ -31,10 +32,18 @@ public class ModelEntry {
 		
 		switch (type) {
 		case BOX:
-			model = new BoxModel(handler.getImage(faces.get("front")), handler.getImage(faces.get("right")), handler.getImage(faces.get("left")), handler.getImage(faces.get("top")));
+			Image front = handler.getImage(faces.get("front"));
+			Image right = handler.getImage(faces.get("right"));
+			Image left = handler.getImage(faces.get("left"));
+			Image top = handler.getImage(faces.get("top"));
+			model = new BoxModel(front, right, left, top);
 			break;
 		case IMAGE:
-			model = new Image2DModel(handler.getImage(faces.get("front")));
+			front = handler.getImage(faces.get("front"));
+			if (front == null) {
+				throw new RuntimeException("Image " + faces.get("front") + " not found!");
+			}
+			model = new Image2DModel(front);
 			break;
 		}
 		

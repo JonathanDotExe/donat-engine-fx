@@ -6,13 +6,13 @@ import at.jojokobi.donatengine.util.Vector2D;
 
 public class ScreenCanvasRenderer implements DataRenderer<ScreenCanvasRenderData>{
 
-	private ShapeRendererHandler handler;
+	private ShapeRendererHandler handler = new ShapeRendererHandler();;
 	
 	@Override
 	public void render(ScreenCanvasRenderData data, RenderContext ctx) {
 		Vector2D center = data.getPosition();
 		for (RenderShape shape : data.getShapes()) {
-			handler.render(shape, ctx, center.clone(), ctx.getPixelsPerMeter());
+			handler.render(shape, ctx, center.clone(), 1);
 		}
 	}
 

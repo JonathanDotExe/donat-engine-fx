@@ -2,6 +2,7 @@ package at.jojokobi.donatengine.javafx.rendering;
 
 import at.jojokobi.donatengine.javafx.JavaFXFontSystem;
 import at.jojokobi.donatengine.javafx.JavaFXPlatform;
+import at.jojokobi.donatengine.platform.GamePlatform;
 import at.jojokobi.donatengine.rendering.RenderText;
 import at.jojokobi.donatengine.style.FixedStyle;
 import at.jojokobi.donatengine.util.Vector2D;
@@ -16,12 +17,13 @@ public class TextRenderer implements ShapeRenderer<RenderText>{
 
 		Vector2D screenPos = center.add(data.getPosition().clone().multiply(scalar));
 		
-		gc.setFill(JavaFXPlatform.toFXColor(style.getFill()));
-		gc.setStroke(JavaFXPlatform.toFXColor(style.getBorder()));
+		Vector2D dim = GamePlatform.getFontSystem().calculateTextDimensions(data.getText(), style.getFont());
+		gc.setFill(JavaFXPlatform.toFXColor(style.getFontColor()));
+		gc.setStroke(JavaFXPlatform.toFXColor(style.getFontBorder()));
 		gc.setLineWidth(style.getBorderStrength());
 		gc.setFont(JavaFXFontSystem.toFXFont(style.getFont()));
-		gc.fillText(data.getText(), screenPos.getX(),  screenPos.getY());
-		gc.strokeText(data.getText(), screenPos.getX(),  screenPos.getY());
+		gc.fillText(data.getText(), screenPos.getX(),  screenPos.getY() + dim.getY());
+		gc.strokeText(data.getText(), screenPos.getX(),  screenPos.getY() + dim.getY());
 	}
 
 	@Override

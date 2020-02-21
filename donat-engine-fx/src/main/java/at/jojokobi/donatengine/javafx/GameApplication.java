@@ -1,9 +1,10 @@
 package at.jojokobi.donatengine.javafx;
 
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.HashMap;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -28,6 +29,8 @@ import javafx.stage.Stage;
 
 public abstract class GameApplication extends Application{
 	
+	private static Logger logger = Logger.getGlobal();
+	
 	private Game game;
 
 	@Override
@@ -43,24 +46,24 @@ public abstract class GameApplication extends Application{
 		Gson gson = builder.create();
 		//Load indexes
 		SoundIndex sounds = null;
-		try (Reader r = new InputStreamReader(soundsInput())) {
-			sounds = gson.fromJson(r, SoundIndex.class);
-		}
+		sounds = gson.fromJson(soundsJSON(), SoundIndex.class);
 		ImageIndex images = null;
-		try (Reader r = new InputStreamReader(soundsInput())) {
-			images = gson.fromJson(r, ImageIndex.class);
-		}
+		images = gson.fromJson(imagesJSON(), ImageIndex.class);
 		ModelIndex models = null;
-		try (Reader r = new InputStreamReader(soundsInput())) {
-			models = gson.fromJson(r, ModelIndex.class);
-		}
+		models = gson.fromJson(modelsJSON(), ModelIndex.class);
 		//Load Sounds
 		for (var s : sounds.getSounds().entrySet()) {
-			ressourceHandler.putMedia(s.getKey(), new Media(getRessourceRoot().getResource("/" + s.getValue().getPath()).toURI().toString()));
+			ressourceHandler.putMedia(s.getKey(), new Media(getRessourceRoot().getResource("/" + soundsRoot() + "/" + s.getValue().getPath()).toURI().toString()));
 		}
 		//Load Images
 		for (var i : images.getImages().entrySet()) {
-			ressourceHandler.putImage(i.getKey(), new Image(getRessourceRoot().getResourceAsStream("/" + i.getValue().getPath())));
+			InputStream in = getRessourceRoot().getResourceAsStream("/" + imagesRoot() + "/" + i.getValue().getPath());
+			if (in != null) {
+				ressourceHandler.putImage(i.getKey(), new Image(in));
+			}
+			else {
+				logger.log(Level.WARNING, "The ressource " + i.getValue().getPath() + " for image " + i.getKey() + " does not exist!");
+			}
 		}
 		//Load Models
 		for (var m : models.getModels().entrySet()) {
@@ -71,9 +74,10 @@ public abstract class GameApplication extends Application{
 		AudioSystem audioSystem = new JavaFXAudioSystem(ressourceHandler);
 		SceneInput input = new SceneInput(new HashMap<>(), new HashMap<>(), new HashMap<>());
 		putControls(input);
-		GameView gameView = new JavaFXView(stage, createRenderer(ressourceHandler), input);
+		JavaFXView gameView = new JavaFXView(stage, createRenderer(ressourceHandler), input);
+		gameView.initStage();
 		
-		Game game = createGame(audioSystem, input, gameView);
+		game = createGame(audioSystem, input, gameView);
 		GameLoop loop = new GameLoop(getUpdatesPerSecond(), game);
 		new Thread(loop, "Game-Loop").start();
 	}
@@ -83,6 +87,40 @@ public abstract class GameApplication extends Application{
 	protected abstract InputStream imagesInput ();
 	
 	protected abstract InputStream modelsInput ();
+	
+	protected String soundsJSON () {
+		StringBuilder json = new StringBuilder();
+		try (Scanner scanner = new Scanner(soundsInput())) {
+			while (scanner.hasNextLine()) {
+				json.append(scanner.nextLine() + System.lineSeparator());
+			}
+		}
+		return json.toString();
+	}
+	
+	protected String imagesJSON () {
+		StringBuilder json = new StringBuilder();
+		try (Scanner scanner = new Scanner(imagesInput())) {
+			while (scanner.hasNextLine()) {
+				json.append(scanner.nextLine() + System.lineSeparator());
+			}
+		}
+		return json.toString();
+	}
+	
+	protected String modelsJSON () {
+		StringBuilder json = new StringBuilder();
+		try (Scanner scanner = new Scanner(modelsInput())) {
+			while (scanner.hasNextLine()) {
+				json.append(scanner.nextLine() + System.lineSeparator());
+			}
+		}
+		return json.toString();
+	}
+	
+	protected abstract String imagesRoot ();
+	
+	protected abstract String soundsRoot ();
 	
 	protected abstract void putControls (SceneInput input);
 	

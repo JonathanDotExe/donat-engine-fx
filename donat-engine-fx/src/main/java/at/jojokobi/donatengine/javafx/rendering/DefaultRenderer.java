@@ -38,6 +38,7 @@ public class DefaultRenderer implements Renderer {
 	public void render(List<RenderData> data, Camera cam, GraphicsContext ctx) {
 		Perspective perspective = getPerspective(cam);
 		RenderContext context = new RenderContext(ctx, cam, perspective, ressourceHandler, pixelsPerMeter);
+		ctx.clearRect(0, 0, cam.getViewWidth(), cam.getViewHeight());
 		for (RenderData r : data) {
 			DataRenderer<?> renderer = renderers.get(r.getClass());
 			if (renderer == null) {

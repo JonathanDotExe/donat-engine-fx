@@ -6,7 +6,7 @@ import at.jojokobi.donatengine.util.Vector2D;
 
 public class CanvasRenderer implements DataRenderer<CanvasRenderData>{
 
-	private ShapeRendererHandler handler;
+	private ShapeRendererHandler handler = new ShapeRendererHandler();
 	
 	@Override
 	public void render(CanvasRenderData data, RenderContext ctx) {

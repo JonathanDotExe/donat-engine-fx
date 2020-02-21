@@ -20,7 +20,6 @@ public class JavaFXView implements GameView{
 	private Renderer renderer;
 	private SceneInput input;
 	private Canvas canvas;
-
 	
 	
 	public JavaFXView(Stage stage, Renderer renderer, SceneInput input) {
@@ -30,14 +29,16 @@ public class JavaFXView implements GameView{
 		this.input = input;
 	}
 
+	/**
+	 * May only be called from the JavaFX Application Thread
+	 */
 	public void initStage () {
-		Platform.runLater(() -> {
-			canvas = new Canvas();
-			Scene scene = new Scene(new BorderPane(canvas));
-			input.registerEvents(scene);
-			stage.setScene(scene);
-			stage.show();
-		});
+		canvas = new Canvas();
+		Scene scene = new Scene(new BorderPane(canvas));
+		input.registerEvents(scene);
+		stage.setScene(scene);
+		stage.setResizable(false);
+		stage.show();
 	}
 
 	@Override
@@ -45,7 +46,7 @@ public class JavaFXView implements GameView{
 		Camera camera = cam.clone();
 		Platform.runLater(() -> {
 			canvas.setWidth(camera.getViewWidth());
-			canvas.setHeight(camera.getViewWidth());
+			canvas.setHeight(camera.getViewHeight());
 			stage.setWidth(canvas.getWidth());
 			stage.setHeight(canvas.getHeight());
 			renderer.render(data, camera, canvas.getGraphicsContext2D());
