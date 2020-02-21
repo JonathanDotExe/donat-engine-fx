@@ -36,13 +36,17 @@ public class DefaultRenderer implements Renderer {
 
 	@Override
 	public void render(List<RenderData> data, Camera cam, GraphicsContext ctx) {
+		cam.setX(cam.getX() * pixelsPerMeter);
+		cam.setY(cam.getY() * pixelsPerMeter);
+		cam.setZ(cam.getZ() * pixelsPerMeter);
+		System.out.println(cam.getX() + "/" + cam.getY() + "/" + cam.getZ());
 		Perspective perspective = getPerspective(cam);
 		RenderContext context = new RenderContext(ctx, cam, perspective, ressourceHandler, pixelsPerMeter);
 		ctx.clearRect(0, 0, cam.getViewWidth(), cam.getViewHeight());
 		for (RenderData r : data) {
 			DataRenderer<?> renderer = renderers.get(r.getClass());
 			if (renderer == null) {
-				logger.log(Level.WARNING, "There is no render specified for the object " + r + "! Please ensure you have implemented a DataRenderer for this object.");
+				logger.log(Level.WARNING, "There is no renderer specified for the object " + r + "! Please ensure you have implemented a DataRenderer for this object.");
 			}
 			else {
 				renderer.renderUnsafe(r, context);
