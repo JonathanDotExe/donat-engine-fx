@@ -20,7 +20,6 @@ public class ModelRenderer implements DataRenderer<ModelRenderData>{
 		GraphicsContext gc = ctx.getCtx();
 		Perspective perspective = ctx.getPerspective();
 		double pixelsPerMeter = ctx.getPixelsPerMeter();
-		
 		Vector3D pos = data.getPosition().getPosition().clone().multiply(pixelsPerMeter);
 		RenderModel model = ressourceHandler.getModel(data.getTag());
 		if (model != null) {

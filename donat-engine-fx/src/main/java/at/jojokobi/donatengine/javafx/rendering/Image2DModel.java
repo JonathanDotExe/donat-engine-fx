@@ -30,12 +30,11 @@ public class Image2DModel extends RenderModel{
 //		double relZ = z - cam.getZ();
 //		
 //		ctx.drawImage(image, relX, cam.mergeYAndZ(relY, relZ));
+
 		
 		Vector3D pos = new Vector3D(x, y + getHeight(), z);
 		Vector2D renderPos = perspective.toScreenPosition(cam, pos).round();
 		ctx.drawImage(image, renderPos.getX(), renderPos.getY(), width, height);
-		
-		
 	}
 
 	public Image getImage() {

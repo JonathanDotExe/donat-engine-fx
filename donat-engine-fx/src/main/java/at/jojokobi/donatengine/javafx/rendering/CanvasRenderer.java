@@ -10,7 +10,7 @@ public class CanvasRenderer implements DataRenderer<CanvasRenderData>{
 	
 	@Override
 	public void render(CanvasRenderData data, RenderContext ctx) {
-		Vector2D center = ctx.getPerspective().toScreenPosition(ctx.getCam(), data.getPosition().getPosition());
+		Vector2D center = ctx.getPerspective().toScreenPosition(ctx.getCam(), data.getPosition().getPosition().clone().multiply(ctx.getPixelsPerMeter()));
 		for (RenderShape shape : data.getShapes()) {
 			handler.render(shape, ctx, center.clone(), ctx.getPixelsPerMeter());
 		}
