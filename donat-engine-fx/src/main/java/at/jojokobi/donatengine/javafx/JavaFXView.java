@@ -33,11 +33,10 @@ public class JavaFXView implements GameView{
 	 * May only be called from the JavaFX Application Thread
 	 */
 	public void initStage () {
-		canvas = new Canvas();
+		canvas = new Canvas(1280, 768);
 		Scene scene = new Scene(new BorderPane(canvas));
 		input.registerEvents(scene);
 		stage.setScene(scene);
-		stage.setResizable(false);
 		stage.show();
 	}
 
@@ -47,8 +46,6 @@ public class JavaFXView implements GameView{
 		Platform.runLater(() -> {
 			canvas.setWidth(camera.getViewWidth());
 			canvas.setHeight(camera.getViewHeight());
-			stage.setWidth(canvas.getWidth());
-			stage.setHeight(canvas.getHeight());
 			renderer.render(data, camera, canvas.getGraphicsContext2D());
 		});
 	}
