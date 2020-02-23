@@ -13,14 +13,12 @@ public class RectRenderer implements ShapeRenderer<RenderRect>{
 		GraphicsContext gc = ctx.getCtx();
 		FixedStyle style = data.getStyle();
 		
-		Vector2D screenPos = center.add(data.getPosition().clone().multiply(scalar));
-		
+		Vector2D screenPos = center.clone().add(data.getPosition().clone().multiply(scalar));
 		gc.setFill(JavaFXPlatform.toFXColor(style.getFill()));
 		gc.setStroke(JavaFXPlatform.toFXColor(style.getBorder()));
 		gc.setLineWidth(style.getBorderStrength());
 		gc.fillRoundRect(screenPos.getX(),  screenPos.getY(), data.getWidth() * scalar, data.getHeight() * scalar, style.getBorderRadius(), style.getBorderRadius());
 		gc.strokeRoundRect(screenPos.getX(),  screenPos.getY(), data.getWidth() * scalar, data.getHeight() * scalar, style.getBorderRadius(), style.getBorderRadius());
-
 	}
 
 	@Override

@@ -44,7 +44,7 @@ public class DefaultRenderer implements Renderer {
 		cam.setY(cam.getY() * pixelsPerMeter);
 		cam.setZ(cam.getZ() * pixelsPerMeter);
 		Perspective perspective = getPerspective(cam);
-		data.sort(new DataComparator(cam, ressourceHandler));
+		data.sort(new DataComparator(cam, ressourceHandler, pixelsPerMeter));
 		RenderContext context = new RenderContext(ctx, cam, perspective, ressourceHandler, pixelsPerMeter);
 		ctx.clearRect(0, 0, cam.getViewWidth(), cam.getViewHeight());
 		for (RenderData r : data) {
@@ -83,12 +83,12 @@ public class DefaultRenderer implements Renderer {
 		renderers.put(renderer.getDataClass(), renderer);
 	}
 	
-	static RenderMetaData getMetaData (RenderData data, RessourceHandler handler) {
+	static RenderMetaData getMetaData (RenderData data, RessourceHandler handler, double pixelsPerMeter) {
 		RenderMetaData meta = null;
 		if (data instanceof ModelRenderData) {
 			ModelRenderData cast = (ModelRenderData) data;
 			RenderModel model = handler.getModel(((ModelRenderData) data).getTag());
-			meta = new RenderMetaData(cast.getPosition().getPosition().getX(), cast.getPosition().getPosition().getY(), cast.getPosition().getPosition().getZ(), model.getWidth(), model.getHeight(), model.getLength(), 0);
+			meta = new RenderMetaData(cast.getPosition().getPosition().getX(), cast.getPosition().getPosition().getY(), cast.getPosition().getPosition().getZ(), model.getWidth()/pixelsPerMeter, model.getHeight()/pixelsPerMeter, model.getLength()/pixelsPerMeter, 0);
 		}
 		else if (data instanceof PositionedRenderData) {
 			PositionedRenderData cast = (PositionedRenderData) data;
@@ -112,19 +112,22 @@ class DataComparator implements Comparator<RenderData>{
 	
 	private Camera camera;
 	private RessourceHandler ressourceHandler;
+	private double pixelsPerMeter;
 
-	public DataComparator(Camera camera, RessourceHandler ressourceHandler) {
+
+	public DataComparator(Camera camera, RessourceHandler ressourceHandler, double pixelsPerMeter) {
 		super();
 		this.camera = camera;
 		this.ressourceHandler = ressourceHandler;
+		this.pixelsPerMeter = pixelsPerMeter;
 	}
 
 	@Override
 	public int compare(RenderData d1, RenderData d2) {
 		int compare = 0;
 		
-		RenderMetaData o1 = DefaultRenderer.getMetaData(d1, ressourceHandler);
-		RenderMetaData o2 = DefaultRenderer.getMetaData(d2, ressourceHandler);
+		RenderMetaData o1 = DefaultRenderer.getMetaData(d1, ressourceHandler, pixelsPerMeter);
+		RenderMetaData o2 = DefaultRenderer.getMetaData(d2, ressourceHandler, pixelsPerMeter);
 		
 		double x1 = o1.getX();
 		double x2 = o2.getX();
