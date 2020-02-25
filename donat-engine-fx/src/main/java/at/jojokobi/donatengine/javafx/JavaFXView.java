@@ -5,6 +5,7 @@ import java.util.List;
 import at.jojokobi.donatengine.javafx.input.SceneInput;
 import at.jojokobi.donatengine.javafx.rendering.Renderer;
 import at.jojokobi.donatengine.objects.Camera;
+import at.jojokobi.donatengine.rendering.CameraHandler;
 import at.jojokobi.donatengine.rendering.GameView;
 import at.jojokobi.donatengine.rendering.RenderData;
 import at.jojokobi.donatengine.util.Vector2D;
@@ -20,7 +21,6 @@ public class JavaFXView implements GameView{
 	private Renderer renderer;
 	private SceneInput input;
 	private Canvas canvas;
-	
 	
 	public JavaFXView(Stage stage, Renderer renderer, SceneInput input) {
 		super();
@@ -73,6 +73,11 @@ public class JavaFXView implements GameView{
 			stage.setWidth(size.getX());
 			stage.setHeight(size.getY());
 		}); 
+	}
+
+	@Override
+	public CameraHandler getCameraHandler() {
+		return renderer;
 	}
 
 }

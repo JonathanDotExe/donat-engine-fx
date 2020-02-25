@@ -8,7 +8,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import at.jojokobi.donatengine.javafx.RessourceHandler;
+import at.jojokobi.donatengine.level.LevelBoundsComponent;
 import at.jojokobi.donatengine.objects.Camera;
+import at.jojokobi.donatengine.objects.GameObject;
 import at.jojokobi.donatengine.rendering.BackgroundRenderData;
 import at.jojokobi.donatengine.rendering.ModelRenderData;
 import at.jojokobi.donatengine.rendering.PositionedRenderData;
@@ -16,6 +18,13 @@ import at.jojokobi.donatengine.rendering.RenderData;
 import at.jojokobi.donatengine.rendering.ScreenPositonedRenderData;
 import javafx.scene.canvas.GraphicsContext;
 
+/**
+ * 
+ * Only supports camera rotations on the X axis between -90 and 0
+ * 
+ * @author jojokobi
+ *
+ */
 public class DefaultRenderer implements Renderer {
 	
 	private static Logger logger = Logger.getGlobal();
@@ -40,6 +49,7 @@ public class DefaultRenderer implements Renderer {
 
 	@Override
 	public void render(List<RenderData> data, Camera cam, GraphicsContext ctx) {
+		CameraBox box = computeCameraBox(cam);
 		cam.setX(cam.getX() * pixelsPerMeter);
 		cam.setY(cam.getY() * pixelsPerMeter);
 		cam.setZ(cam.getZ() * pixelsPerMeter);
@@ -48,12 +58,15 @@ public class DefaultRenderer implements Renderer {
 		RenderContext context = new RenderContext(ctx, cam, perspective, ressourceHandler, pixelsPerMeter);
 		ctx.clearRect(0, 0, cam.getViewWidth(), cam.getViewHeight());
 		for (RenderData r : data) {
-			DataRenderer<?> renderer = renderers.get(r.getClass());
-			if (renderer == null) {
-				logger.log(Level.WARNING, "There is no renderer specified for the object " + r + "! Please ensure you have implemented a DataRenderer for this object.");
-			}
-			else {
-				renderer.renderUnsafe(r, context);
+			RenderMetaData meta = getMetaData(r, ressourceHandler, pixelsPerMeter);
+			if (meta.canRender(box.getX(), box.getY(), box.getZ(), box.getWidth(), box.getHeight(), box.getLength(), cam.getArea())) {
+				DataRenderer<?> renderer = renderers.get(r.getClass());
+				if (renderer == null) {
+					logger.log(Level.WARNING, "There is no renderer specified for the object " + r + "! Please ensure you have implemented a DataRenderer for this object.");
+				}
+				else {
+					renderer.renderUnsafe(r, context);
+				}
 			}
 		}
 	}
@@ -88,22 +101,90 @@ public class DefaultRenderer implements Renderer {
 		if (data instanceof ModelRenderData) {
 			ModelRenderData cast = (ModelRenderData) data;
 			RenderModel model = handler.getModel(((ModelRenderData) data).getTag());
-			meta = new RenderMetaData(cast.getPosition().getPosition().getX(), cast.getPosition().getPosition().getY(), cast.getPosition().getPosition().getZ(), model.getWidth()/pixelsPerMeter, model.getHeight()/pixelsPerMeter, model.getLength()/pixelsPerMeter, 0);
+			meta = new RenderMetaData(cast.getPosition().getPosition().getX(), cast.getPosition().getPosition().getY(), cast.getPosition().getPosition().getZ(), model.getWidth()/pixelsPerMeter, model.getHeight()/pixelsPerMeter, model.getLength()/pixelsPerMeter, cast.getPosition().getArea(), 0);
 		}
 		else if (data instanceof PositionedRenderData) {
 			PositionedRenderData cast = (PositionedRenderData) data;
-			meta = new RenderMetaData(cast.getPosition().getPosition().getX(), cast.getPosition().getPosition().getY(), cast.getPosition().getPosition().getZ(), 0, 0, 0, 0);
+			meta = new RenderMetaData(cast.getPosition().getPosition().getX(), cast.getPosition().getPosition().getY(), cast.getPosition().getPosition().getZ(), 0, 0, 0, cast.getPosition().getArea(), 0);
 		}
 		else if (data instanceof ScreenPositonedRenderData) {
-			meta = new RenderMetaData(0, 0, 0, 0, 0, 0, 1);
+			meta = new RenderMetaData(0, 0, 0, 0, 0, 0, "", 1);
 		}
 		else if (data instanceof BackgroundRenderData) {
-			meta = new RenderMetaData(0, 0, 0, 0, 0, 0, -1);
+			meta = new RenderMetaData(0, 0, 0, 0, 0, 0, "", -1);
 		}
 		else {
-			meta = new RenderMetaData(0, 0, 0, 0, 0, 0, 0);
+			meta = new RenderMetaData(0, 0, 0, 0, 0, 0, "", 0);
 		}
 		return meta;
+	}
+	
+	public CameraBox computeCameraBox (Camera camera) {
+		double width = camera.getViewWidth()/pixelsPerMeter;
+		double height = camera.getViewHeight()/pixelsPerMeter * Math.cos(Math.toRadians(camera.getRotationX())) + camera.getFarClip() * Math.sin(Math.toRadians(camera.getRotationX()));
+		double length = camera.getViewHeight()/pixelsPerMeter * Math.sin(Math.toRadians(camera.getRotationX())) + camera.getFarClip() * Math.cos(Math.toRadians(camera.getRotationX()));
+		double x = camera.getX() - width/2;
+		double y = camera.getY() - height;
+		double z = camera.getZ() - length/2;
+		return new CameraBox(x, y, z, width, height, length);
+	}
+
+	@Override
+	public void doCameraFollow(GameObject follow, at.jojokobi.donatengine.level.Level level, Camera cam, double maxBorderDst) {
+		CameraBox box = computeCameraBox(cam);
+		
+		//Follow
+		double x = box.getX() + box.getWidth() * maxBorderDst;
+		double dx = box.getX() + box.getWidth() * (1 - maxBorderDst);
+		double y = box.getY() + box.getHeight() * maxBorderDst;
+		double dy = box.getY() + box.getHeight() * (1 - maxBorderDst);
+		double z = box.getZ() + box.getLength() * maxBorderDst;
+		double dz = box.getZ() + box.getLength() * (1 - maxBorderDst);
+		// X
+		if (follow.getX() < x) {
+			cam.setX(follow.getX() - box.getWidth() * maxBorderDst + box.getWidth()/2);
+		}
+		if (follow.getX() > dx) {
+			cam.setX(follow.getX() - box.getWidth() * (1 - maxBorderDst) + box.getWidth()/2);
+		}
+		// Y
+		if (follow.getY() < y) {
+			cam.setY(follow.getY() - box.getHeight() * maxBorderDst + box.getHeight());
+		}
+		if (follow.getY() > dy) {
+			cam.setY(follow.getY() - box.getHeight() * (1 - maxBorderDst) + box.getHeight());
+		}
+		// Z
+		if (follow.getZ() < z) {
+			cam.setZ(follow.getZ() - box.getLength() * maxBorderDst + box.getLength()/2);
+		}
+		if (follow.getZ() > dz) {
+			cam.setZ(follow.getZ() - box.getLength() * (1 - maxBorderDst) + box.getLength()/2);
+		}
+		cam.setArea(follow.getArea());
+		
+		//Bounds
+		LevelBoundsComponent bounds = level.getComponent(LevelBoundsComponent.class);
+		if (bounds != null) {
+			if (cam.getX() - cam.getViewWidth()/pixelsPerMeter/2 < bounds.getPos().getX()) {
+				cam.setX(bounds.getPos().getX() + cam.getViewWidth()/pixelsPerMeter/2);
+			}
+			if (cam.getX() + cam.getViewWidth()/pixelsPerMeter/2 > bounds.getPos().getX() + bounds.getSize().getX()) {
+				cam.setX(bounds.getPos().getX() - cam.getViewWidth()/pixelsPerMeter/2 + bounds.getSize().getX());
+			}
+			if (cam.getY() - cam.getViewHeight()/pixelsPerMeter < bounds.getPos().getY()) {
+				cam.setY(bounds.getPos().getY() + cam.getViewHeight()/pixelsPerMeter);
+			}
+			if (cam.getY() > bounds.getPos().getY() + bounds.getSize().getY()) {
+				cam.setY(bounds.getPos().getY() + bounds.getSize().getY());
+			}
+			if (cam.getZ() - cam.getViewHeight()/pixelsPerMeter/2 < bounds.getPos().getZ()) {
+				cam.setZ(bounds.getPos().getZ() + cam.getViewHeight()/pixelsPerMeter/2);
+			}
+			if (cam.getZ() + cam.getViewHeight()/pixelsPerMeter/2 > bounds.getPos().getZ() + bounds.getSize().getZ()) {
+				cam.setZ(bounds.getPos().getZ() - cam.getViewHeight()/pixelsPerMeter/2 + bounds.getSize().getZ());
+			}
+		}
 	}
 
 }
@@ -168,9 +249,11 @@ class RenderMetaData {
 	private double width;
 	private double height;
 	private double length;
+	private String area;
 	private int priority;
 	
-	public RenderMetaData(double x, double y, double z, double width, double height, double length, int priority) {
+	public RenderMetaData(double x, double y, double z, double width, double height, double length, String area,
+			int priority) {
 		super();
 		this.x = x;
 		this.y = y;
@@ -178,7 +261,12 @@ class RenderMetaData {
 		this.width = width;
 		this.height = height;
 		this.length = length;
+		this.area = area;
 		this.priority = priority;
+	}
+
+	public boolean canRender (double x, double y, double z, double width, double height, double length, String area) {
+		return priority != 0 || (area.equals(this.area) && getX() < x + width && x < getX() + getWidth() && getY() < y + height && y < getY() + getHeight() && getZ() < z + length && z < getZ() + getLength());
 	}
 
 	public double getX() {
