@@ -7,7 +7,10 @@ import at.jojokobi.donatengine.javafx.rendering.Renderer;
 import at.jojokobi.donatengine.objects.Camera;
 import at.jojokobi.donatengine.rendering.CameraHandler;
 import at.jojokobi.donatengine.rendering.GameView;
+import at.jojokobi.donatengine.rendering.ModelRenderData;
 import at.jojokobi.donatengine.rendering.RenderData;
+import at.jojokobi.donatengine.tiles.TileInstance;
+import at.jojokobi.donatengine.tiles.TileSystem;
 import at.jojokobi.donatengine.util.Vector2D;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -39,10 +42,19 @@ public class JavaFXView implements GameView{
 		stage.setScene(scene);
 		stage.show();
 	}
+	
 
 	@Override
-	public void render(List<RenderData> data, Camera cam) {
+	public void bind(TileSystem tileSystem) {
+		
+	}
+
+	@Override
+	public void render(List<RenderData> data, TileSystem tileSystem, Camera cam) {
 		Camera camera = cam.clone();
+		for (TileInstance tile : tileSystem.getTiles()) {
+			data.add(new ModelRenderData(tileSystem.toPosition(tile.getPosition()), tile.getTile().getModel()));
+		}
 		Platform.runLater(() -> {
 			canvas.setWidth(camera.getViewWidth());
 			canvas.setHeight(camera.getViewHeight());
