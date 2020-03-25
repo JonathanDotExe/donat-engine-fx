@@ -56,8 +56,8 @@ public class JavaFXView implements GameView{
 			data.add(new ModelRenderData(tileSystem.toPosition(tile.getTilePosition()), tile.getTile().getModel()));
 		}
 		Platform.runLater(() -> {
-			canvas.setWidth(camera.getViewWidth());
-			canvas.setHeight(camera.getViewHeight());
+			canvas.setScaleX(canvas.getScene().getWidth()/camera.getViewWidth());
+			canvas.setScaleY(canvas.getScene().getHeight()/camera.getViewHeight());
 			renderer.render(data, camera, canvas.getGraphicsContext2D());
 		});
 	}
@@ -90,6 +90,10 @@ public class JavaFXView implements GameView{
 	@Override
 	public CameraHandler getCameraHandler() {
 		return renderer;
+	}
+
+	public Canvas getCanvas() {
+		return canvas;
 	}
 
 }

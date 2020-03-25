@@ -23,6 +23,8 @@ import at.jojokobi.donatengine.javafx.ressources.SoundIndex;
 import at.jojokobi.donatengine.platform.GamePlatform;
 import at.jojokobi.donatengine.rendering.GameView;
 import javafx.application.Application;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.image.Image;
 import javafx.scene.media.Media;
 import javafx.stage.Stage;
@@ -72,10 +74,14 @@ public abstract class GameApplication extends Application{
 		
 		//Engine Components
 		AudioSystem audioSystem = new JavaFXAudioSystem(ressourceHandler);
-		SceneInput input = new SceneInput(new HashMap<>(), new HashMap<>(), new HashMap<>());
+		DoubleProperty mouseXProperty = new SimpleDoubleProperty();
+		DoubleProperty mouseYProperty = new SimpleDoubleProperty();
+		SceneInput input = new SceneInput(new HashMap<>(), new HashMap<>(), new HashMap<>(), mouseXProperty, mouseYProperty);
 		putControls(input);
 		JavaFXView gameView = new JavaFXView(stage, createRenderer(ressourceHandler), input);
 		gameView.initStage();
+		mouseXProperty.bind(gameView.getCanvas().scaleXProperty());
+		mouseYProperty.bind(gameView.getCanvas().scaleYProperty());
 		
 		game = createGame(audioSystem, input, gameView);
 		GameLoop loop = new GameLoop(getUpdatesPerSecond(), game);

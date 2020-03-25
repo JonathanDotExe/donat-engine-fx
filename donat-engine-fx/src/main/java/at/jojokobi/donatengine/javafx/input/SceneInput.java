@@ -9,6 +9,7 @@ import java.util.Set;
 
 import at.jojokobi.donatengine.input.Input;
 import at.jojokobi.donatengine.util.Vector2D;
+import javafx.beans.property.DoubleProperty;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
@@ -28,13 +29,16 @@ public class SceneInput implements Input{
 	
 	private Map<String, Boolean> changedButtons = new HashMap<>();
 	
+	private DoubleProperty mouseXScale;
+	private DoubleProperty mouseYScale;
+	
 	private double mouseX = 0;
 	private double mouseY = 0;
 	
 	private List<String> typedChars = new ArrayList<>();
 
 	public SceneInput(Map<String, KeyCode> keyBindings, Map<String, MouseButton> mouseButtonBindings,
-			Map<String, Axis> axisBindings) {
+			Map<String, Axis> axisBindings, DoubleProperty mouseXScale, DoubleProperty mouseYScale) {
 		super();
 		this.keyBindings = keyBindings;
 		this.mouseButtonBindings = mouseButtonBindings;
@@ -43,6 +47,9 @@ public class SceneInput implements Input{
 		mouseButtonBindings.putIfAbsent(PRIMARY_BUTTON, MouseButton.PRIMARY);
 		mouseButtonBindings.putIfAbsent(SECONDARY_BUTTON, MouseButton.SECONDARY);
 		keyBindings.putIfAbsent(SUBMIT_BUTTON, KeyCode.ENTER);
+		
+		this.mouseXScale = mouseXScale;
+		this.mouseYScale = mouseYScale;
 	}
 
 	public void registerEvents (Scene scene) {
@@ -100,8 +107,8 @@ public class SceneInput implements Input{
 		scene.setOnMouseMoved(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				mouseX = event.getSceneX();
-				mouseY = event.getSceneY();
+				mouseX = event.getSceneX() / mouseXScale.get();
+				mouseY = event.getSceneY() / mouseYScale.get();
 			}
 		});
 	}
