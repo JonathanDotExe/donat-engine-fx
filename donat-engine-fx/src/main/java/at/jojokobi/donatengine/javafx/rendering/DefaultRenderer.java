@@ -141,10 +141,20 @@ public class DefaultRenderer implements Renderer {
 		}
 		return new CameraBox(x, y, z, width, height, length);
 	}
+	
+	public CameraBox computeFollowCameraBox (Camera camera) {
+		double width = camera.getViewWidth()/pixelsPerMeter;
+		double height = camera.getViewHeight()/pixelsPerMeter;
+		double length = camera.getViewHeight()/pixelsPerMeter;
+		double x = camera.getX() - width/2;
+		double y = camera.getY() - height;
+		double z = camera.getZ() - length/2;
+		return new CameraBox(x, y, z, width, height, length);
+	}
 
 	@Override
 	public void doCameraFollow(GameObject follow, at.jojokobi.donatengine.level.Level level, Camera cam, double maxBorderDst) {
-		CameraBox box = computeCameraBox(cam);
+		CameraBox box = computeFollowCameraBox(cam);
 		
 		//Follow
 		double x = box.getX() + box.getWidth() * maxBorderDst;
