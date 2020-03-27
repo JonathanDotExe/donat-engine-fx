@@ -50,11 +50,12 @@ public class DefaultRenderer implements Renderer {
 	@Override
 	public void render(List<RenderData> data, Camera cam, GraphicsContext ctx) {
 		CameraBox box = computeCameraBox(cam);
+		System.out.println(box);
 		cam.setX(cam.getX() * pixelsPerMeter);
 		cam.setY(cam.getY() * pixelsPerMeter);
 		cam.setZ(cam.getZ() * pixelsPerMeter);
-		cam.setRotationX(-cam.getRotationX());
-		//TODO: Make stuff involving inverted x rotation better to read
+		cam.setRotationX(modifyXRotation(cam.getRotationX()));
+		//TODO: Recalculate all rendering stuff to get cleaner formulas
 		Perspective perspective = getPerspective(cam);
 		data.sort(new DataComparator(cam, ressourceHandler, pixelsPerMeter));
 		RenderContext context = new RenderContext(ctx, cam, perspective, ressourceHandler, pixelsPerMeter);
@@ -71,6 +72,10 @@ public class DefaultRenderer implements Renderer {
 				}
 			}
 		}
+	}
+	
+	private double modifyXRotation (double xRotation) {
+		return -180 + xRotation;
 	}
 	
 	private static Perspective getPerspective (Camera cam) {
@@ -123,11 +128,15 @@ public class DefaultRenderer implements Renderer {
 	
 	public CameraBox computeCameraBox (Camera camera) {
 		double width = camera.getViewWidth()/pixelsPerMeter;
-		double height = camera.getViewHeight()/pixelsPerMeter * Math.cos(Math.toRadians(-camera.getRotationX())) + camera.getFarClip() * Math.sin(Math.toRadians(-camera.getRotationX()));
-		double length = camera.getViewHeight()/pixelsPerMeter * Math.sin(Math.toRadians(-camera.getRotationX())) + camera.getFarClip() * Math.cos(Math.toRadians(-camera.getRotationX()));
+		double height = camera.getViewHeight()/pixelsPerMeter * Math.cos(Math.toRadians(camera.getRotationX())) + camera.getFarClip() * Math.sin(Math.toRadians(camera.getRotationX()));
+		double length = camera.getViewHeight()/pixelsPerMeter * Math.sin(Math.toRadians(camera.getRotationX())) + camera.getFarClip() * Math.cos(Math.toRadians(camera.getRotationX()));
 		double x = camera.getX() - width/2;
 		double y = camera.getY() - height;
 		double z = camera.getZ() - length/2;
+		if (height < 0) {
+			y += 2 * height;
+			height *= -1;
+		}
 		return new CameraBox(x, y, z, width, height, length);
 	}
 
