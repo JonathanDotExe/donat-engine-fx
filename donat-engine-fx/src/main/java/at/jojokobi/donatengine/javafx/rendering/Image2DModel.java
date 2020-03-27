@@ -11,8 +11,9 @@ public class Image2DModel extends RenderModel{
 	private Image image;
 	private double width;
 	private double height;
+	private double length;
 
-	public Image2DModel(Image image, double width, double height) {
+	public Image2DModel(Image image, double width, double height, double length) {
 		super();
 		this.image = image;
 		this.width = width;
@@ -20,7 +21,7 @@ public class Image2DModel extends RenderModel{
 	}
 	
 	public Image2DModel(Image image) {
-		this(image, image.getWidth(), image.getHeight());
+		this(image, image.getWidth(), image.getHeight(), image.getHeight());
 	}
 
 	@Override
@@ -53,7 +54,7 @@ public class Image2DModel extends RenderModel{
 
 	@Override
 	public double getLength() {
-		return height;
+		return length;
 	}
 
 }

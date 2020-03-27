@@ -13,6 +13,9 @@ public class ModelEntry {
 	
 	private ModelType type;
 	private Map<String, String> faces = new HashMap<>();
+	private Double width;
+	private Double height;
+	private Double length;
 	
 	public ModelType getType() {
 		return type;
@@ -27,6 +30,26 @@ public class ModelEntry {
 		this.faces = faces;
 	}
 	
+	
+	
+	public Double getWidth() {
+		return width;
+	}
+	public void setWidth(Double width) {
+		this.width = width;
+	}
+	public Double getHeight() {
+		return height;
+	}
+	public void setHeight(Double height) {
+		this.height = height;
+	}
+	public Double getLength() {
+		return length;
+	}
+	public void setLength(Double length) {
+		this.length = length;
+	}
 	public RenderModel toRenderModel (RessourceHandler handler) {
 		RenderModel model = null;
 		
@@ -36,14 +59,24 @@ public class ModelEntry {
 			Image right = handler.getImage(faces.get("right"));
 			Image left = handler.getImage(faces.get("left"));
 			Image top = handler.getImage(faces.get("top"));
-			model = new BoxModel(front, right, left, top);
+			if (width != null && height != null && length != null) {
+				model = new BoxModel(front, right, left, top, width, height, length);
+			}
+			else {
+				model = new BoxModel(front, right, left, top);
+			}
 			break;
 		case IMAGE:
 			front = handler.getImage(faces.get("front"));
 			if (front == null) {
 				throw new RuntimeException("Image " + faces.get("front") + " not found!");
 			}
-			model = new Image2DModel(front);
+			if (width != null && height != null && length != null) {
+				model = new Image2DModel(front, width, height, length);
+			}
+			else {
+				model = new Image2DModel(front);
+			}
 			break;
 		}
 		

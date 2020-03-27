@@ -16,15 +16,28 @@ public class BoxModel extends RenderModel {
 	private Image top;
 	private Image left;
 	private Image right;
+	private double width;
+	private double height;
+	private double length;
 
-	public BoxModel(Image front, Image right, Image left, Image top) {
+	
+	
+	public BoxModel(Image front, Image top, Image left, Image right, double width, double height,
+			double length) {
 		super();
 		this.front = front;
-		this.right = right;
-		this.left = left;
 		this.top = top;
+		this.left = left;
+		this.right = right;
+		this.width = width;
+		this.height = height;
+		this.length = length;
 	}
 	
+	public BoxModel(Image front, Image top, Image left, Image right) {
+		this(front, top, left, right, front != null ? front.getWidth() : 0, front != null ? front.getHeight() : 0,  top != null ? top.getHeight() : 0);
+	}
+
 	public BoxModel(Image front, Image top) {
 		this (front, front, front, top);
 	}
@@ -139,17 +152,17 @@ public class BoxModel extends RenderModel {
 
 	@Override
 	public double getWidth() {
-		return front != null ? front.getWidth() : 0;
+		return width;
 	}
 
 	@Override
 	public double getHeight() {
-		return front != null ? front.getHeight() : 0;
+		return height;
 	}
 
 	@Override
 	public double getLength() {
-		return top != null ? top.getHeight() : 0;
+		return length;
 	}
 
 	public boolean isBorder() {
