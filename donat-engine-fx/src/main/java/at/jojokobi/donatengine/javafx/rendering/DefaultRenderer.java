@@ -81,6 +81,9 @@ public class DefaultRenderer implements Renderer {
 		Perspective perspective = null;
 		for (String attribute : cam.getAttributes()) {
 			switch (attribute) {
+			case "retro3d":
+				perspective = new Retro3DPerspective();
+				break;
 			case "orthographic":
 				perspective = new StretchYZPerspective();
 				break;
