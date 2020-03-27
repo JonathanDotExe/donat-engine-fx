@@ -50,7 +50,6 @@ public class DefaultRenderer implements Renderer {
 	@Override
 	public void render(List<RenderData> data, Camera cam, GraphicsContext ctx) {
 		CameraBox box = computeCameraBox(cam);
-		System.out.println(box);
 		cam.setX(cam.getX() * pixelsPerMeter);
 		cam.setY(cam.getY() * pixelsPerMeter);
 		cam.setZ(cam.getZ() * pixelsPerMeter);
