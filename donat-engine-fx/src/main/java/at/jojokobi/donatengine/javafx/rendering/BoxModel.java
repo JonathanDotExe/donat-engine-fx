@@ -115,7 +115,7 @@ public class BoxModel extends RenderModel {
 			{
 				Vector2D ul = perspective.toScreenPosition(cam, pos.clone().add(0, getHeight(), getLength())).round();
 				Vector2D lr = perspective.toScreenPosition(cam, pos.clone().add(getWidth(), 0, getLength())).round();
-				ctx.drawImage(top, ul.getX(), ul.getY(), lr.getX() - ul.getX(), lr.getY() - ul.getY());
+				ctx.drawImage(front, ul.getX(), ul.getY(), lr.getX() - ul.getX(), lr.getY() - ul.getY());
 			}
 			break;
 		}

@@ -56,12 +56,14 @@ public abstract class GameApplication extends Application{
 		//Load Sounds
 		for (var s : sounds.getSounds().entrySet()) {
 			ressourceHandler.putMedia(s.getKey(), new Media(getRessourceRoot().getResource("/" + soundsRoot() + "/" + s.getValue().getPath()).toURI().toString()));
+			logger.info("Loaded sound " + s.getKey() + " from path " + s.getValue().getPath() + "!");
 		}
 		//Load Images
 		for (var i : images.getImages().entrySet()) {
 			InputStream in = getRessourceRoot().getResourceAsStream("/" + imagesRoot() + "/" + i.getValue().getPath());
 			if (in != null) {
 				ressourceHandler.putImage(i.getKey(), new Image(in));
+				logger.info("Loaded image " + i.getKey() + " from path " + i.getValue().getPath() + "!");
 			}
 			else {
 				logger.log(Level.WARNING, "The ressource " + i.getValue().getPath() + " for image " + i.getKey() + " does not exist!");
@@ -70,6 +72,7 @@ public abstract class GameApplication extends Application{
 		//Load Models
 		for (var m : models.getModels().entrySet()) {
 			ressourceHandler.putModel(m.getKey(), m.getValue().toRenderModel(ressourceHandler));
+			logger.info("Loaded model " + m.getKey() + "!");
 		}
 		
 		//Engine Components
