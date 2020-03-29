@@ -246,6 +246,10 @@ class DataComparator implements Comparator<RenderData>{
 			compare = -1;
 		} else if (o1.getPriority() > o2.getPriority()) {
 			compare = 1;
+		} else if (z1 + length1 <= z2 ) {
+			compare = -1;
+		} else if (z1 >= z2 + length2) {
+			compare = 1;
 		} else if (y1 < y2) {
 			compare = -1;
 		} else if (y1 > y2) {
