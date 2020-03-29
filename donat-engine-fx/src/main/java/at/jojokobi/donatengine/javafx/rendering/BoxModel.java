@@ -22,7 +22,7 @@ public class BoxModel extends RenderModel {
 
 	
 	
-	public BoxModel(Image front, Image top, Image left, Image right, double width, double height,
+	public BoxModel(Image front, Image right, Image left, Image top, double width, double height,
 			double length) {
 		super();
 		this.front = front;
@@ -34,8 +34,8 @@ public class BoxModel extends RenderModel {
 		this.length = length;
 	}
 	
-	public BoxModel(Image front, Image top, Image left, Image right) {
-		this(front, top, left, right, front != null ? front.getWidth() : 0, front != null ? front.getHeight() : 0,  top != null ? top.getHeight() : 0);
+	public BoxModel(Image front, Image right, Image left, Image top) {
+		this(front, right, left, top, front != null ? front.getWidth() : 0, front != null ? front.getHeight() : 0,  top != null ? top.getHeight() : 0);
 	}
 
 	public BoxModel(Image front, Image top) {
