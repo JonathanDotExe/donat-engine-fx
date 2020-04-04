@@ -18,6 +18,7 @@ public class Image2DModel extends RenderModel{
 		this.image = image;
 		this.width = width;
 		this.height = height;
+		this.length = length;
 	}
 	
 	public Image2DModel(Image image) {
@@ -33,9 +34,9 @@ public class Image2DModel extends RenderModel{
 //		ctx.drawImage(image, relX, cam.mergeYAndZ(relY, relZ));
 
 		
-		Vector3D pos = new Vector3D(x, y + getHeight(), z);
+		Vector3D pos = new Vector3D(x, y, z + getLength());
 		Vector2D renderPos = perspective.toScreenPosition(cam, pos).round();
-		ctx.drawImage(image, renderPos.getX(), renderPos.getY(), width, height);
+		ctx.drawImage(image, renderPos.getX(), renderPos.getY() - height, width, height);
 	}
 
 	public Image getImage() {

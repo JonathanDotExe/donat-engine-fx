@@ -106,7 +106,7 @@ public class BoxModel extends RenderModel {
 			}
 			break;
 		case FULL:
-			if ((cam.getRotationX() + 45) % 180 > 90) {
+			if ((Math.abs(cam.getRotationX()) + 45) % 180 > 90) {
 				//Top
 				Vector2D ul = perspective.toScreenPosition(cam, pos.clone().add(0, getHeight(), 0)).round();
 				ctx.drawImage(top, ul.getX(), ul.getY());

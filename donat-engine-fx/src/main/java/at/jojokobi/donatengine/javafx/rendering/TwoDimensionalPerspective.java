@@ -7,7 +7,7 @@ public class TwoDimensionalPerspective implements Perspective{
 
 	@Override
 	public Vector2D toScreenPosition(Vector3D pos, Vector3D rotation) {
-		return ((rotation.getX() + 45) % 180 > 90) ? new Vector2D(pos.getX(), pos.getZ()) : new Vector2D(pos.getX(), pos.getY());
+		return ((Math.abs(rotation.getX()) + 45) % 180) > 90 ? new Vector2D(pos.getX(), pos.getZ()) : new Vector2D(pos.getX(), pos.getY());
 	}
 	
 	@Override

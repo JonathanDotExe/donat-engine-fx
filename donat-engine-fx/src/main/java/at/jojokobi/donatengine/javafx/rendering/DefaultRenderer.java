@@ -139,6 +139,10 @@ public class DefaultRenderer implements Renderer {
 			y += 2 * height;
 			height *= -1;
 		}
+		if (length < 0) {
+			z += length;
+			length *= -1;
+		}
 		return new CameraBox(x, y, z, width, height, length);
 	}
 	
@@ -149,6 +153,14 @@ public class DefaultRenderer implements Renderer {
 		double x = camera.getX() - width/2;
 		double y = camera.getY() - height;
 		double z = camera.getZ() - length/2;
+		if (height < 0) {
+			y += 2 * height;
+			height *= -1;
+		}
+		if (length < 0) {
+			z += length;
+			length *= -1;
+		}
 		return new CameraBox(x, y, z, width, height, length);
 	}
 
@@ -246,9 +258,9 @@ class DataComparator implements Comparator<RenderData>{
 			compare = -1;
 		} else if (o1.getPriority() > o2.getPriority()) {
 			compare = 1;
-		} else if (z1 + length1 <= z2 ) {
+		} else if (z1 + length1 < z2 ) {
 			compare = -1;
-		} else if (z1 >= z2 + length2) {
+		} else if (z1 > z2 + length2) {
 			compare = 1;
 		} else if (y1 < y2) {
 			compare = -1;
