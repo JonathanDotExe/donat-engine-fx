@@ -1,6 +1,10 @@
 package at.jojokobi.donatengine.javafx.rendering;
 
+import java.util.Comparator;
+
+import at.jojokobi.donatengine.javafx.RessourceHandler;
 import at.jojokobi.donatengine.objects.Camera;
+import at.jojokobi.donatengine.rendering.RenderData;
 import at.jojokobi.donatengine.util.Vector2D;
 import at.jojokobi.donatengine.util.Vector3D;
 
@@ -13,6 +17,8 @@ public interface Perspective {
 	public Vector2D toScreenPosition (Vector3D pos, Vector3D rotation);
 	
 	public OptimizationLevel getOptimizationLevel ();
+	
+	public Comparator<RenderData> getComparator (Camera cam, RessourceHandler ressourceHandler, double pixelsPerMeter);
 	
 	public default Vector3D getCenterRelative(Vector3D pos, Camera cam) {
 		return pos.clone().subtract(cam.getX(), cam.getY(), cam.getZ());

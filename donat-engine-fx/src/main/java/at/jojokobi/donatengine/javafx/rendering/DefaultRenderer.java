@@ -56,7 +56,7 @@ public class DefaultRenderer implements Renderer {
 		cam.setRotationX(modifyXRotation(cam.getRotationX()));
 		//TODO: Recalculate all rendering stuff to get cleaner formulas
 		Perspective perspective = getPerspective(cam);
-		data.sort(new DataComparator(cam, ressourceHandler, pixelsPerMeter));
+		data.sort(perspective.getComparator(cam, ressourceHandler, pixelsPerMeter));
 		RenderContext context = new RenderContext(ctx, cam, perspective, ressourceHandler, pixelsPerMeter);
 		ctx.clearRect(0, 0, cam.getViewWidth(), cam.getViewHeight());
 		for (RenderData r : data) {
