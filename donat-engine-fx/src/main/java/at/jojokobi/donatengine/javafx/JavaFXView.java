@@ -50,10 +50,10 @@ public class JavaFXView implements GameView{
 	}
 
 	@Override
-	public void render(List<RenderData> data, TileSystem tileSystem, Camera cam) {
+	public void render(List<RenderData> data, TileSystem tileSystem, Camera cam, double timer) {
 		Camera camera = cam.clone();
 		for (TileInstance tile : tileSystem.getTiles()) {
-			data.add(new ModelRenderData(tileSystem.toPosition(tile.getTilePosition()), tile.getTile().getModel()));
+			data.add(new ModelRenderData(tileSystem.toPosition(tile.getTilePosition()), tile.getTile().getModel(), timer));
 		}
 		Platform.runLater(() -> {
 			canvas.setScaleX(canvas.getScene().getWidth()/camera.getViewWidth());

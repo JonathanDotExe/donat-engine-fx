@@ -1,19 +1,21 @@
-package at.jojokobi.donatengine.javafx.rendering;
+package at.jojokobi.donatengine.javafx.rendering.models;
 
+import at.jojokobi.donatengine.javafx.rendering.Perspective;
+import at.jojokobi.donatengine.javafx.ressources.Texture;
 import at.jojokobi.donatengine.objects.Camera;
 import at.jojokobi.donatengine.util.Vector2D;
 import at.jojokobi.donatengine.util.Vector3D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
+
 
 public class Image2DModel extends RenderModel{
 	
-	private Image image;
+	private Texture image;
 	private double width;
 	private double height;
 	private double length;
 
-	public Image2DModel(Image image, double width, double height, double length) {
+	public Image2DModel(Texture image, double width, double height, double length) {
 		super();
 		this.image = image;
 		this.width = width;
@@ -21,25 +23,25 @@ public class Image2DModel extends RenderModel{
 		this.length = length;
 	}
 	
-	public Image2DModel(Image image) {
+	public Image2DModel(Texture image) {
 		this(image, image.getWidth(), image.getHeight(), image.getHeight());
 	}
 
 	@Override
-	public void render(GraphicsContext ctx, Camera cam, Perspective perspective, double x, double y, double z) {
+	public void render(GraphicsContext ctx, Camera cam, Perspective perspective, double x, double y, double z, double timer) {
 //		double relX = x - cam.getX();
 //		double relY = cam.getHeight() - (y - cam.getY());
 //		double relZ = z - cam.getZ();
 //		
-//		ctx.drawImage(image, relX, cam.mergeYAndZ(relY, relZ));
+//		ctx.drawTexture(image, relX, cam.mergeYAndZ(relY, relZ));
 
 		
 		Vector3D pos = new Vector3D(x, y, z + getLength());
 		Vector2D renderPos = perspective.toScreenPosition(cam, pos).round();
-		ctx.drawImage(image, renderPos.getX(), renderPos.getY() - height, width, height);
+		ctx.drawImage(image.getImage(timer), renderPos.getX(), renderPos.getY() - height, width, height);
 	}
 
-	public Image getImage() {
+	public Texture getImage() {
 		return image;
 	}
 

@@ -3,11 +3,9 @@ package at.jojokobi.donatengine.javafx.ressources;
 import java.util.HashMap;
 import java.util.Map;
 
-import at.jojokobi.donatengine.javafx.RessourceHandler;
-import at.jojokobi.donatengine.javafx.rendering.BoxModel;
-import at.jojokobi.donatengine.javafx.rendering.Image2DModel;
-import at.jojokobi.donatengine.javafx.rendering.RenderModel;
-import javafx.scene.image.Image;
+import at.jojokobi.donatengine.javafx.rendering.models.BoxModel;
+import at.jojokobi.donatengine.javafx.rendering.models.Image2DModel;
+import at.jojokobi.donatengine.javafx.rendering.models.RenderModel;
 
 public class ModelEntry {
 	
@@ -55,10 +53,10 @@ public class ModelEntry {
 		
 		switch (type) {
 		case BOX:
-			Image front = handler.getImage(faces.get("front"));
-			Image right = handler.getImage(faces.get("right"));
-			Image left = handler.getImage(faces.get("left"));
-			Image top = handler.getImage(faces.get("top"));
+			Texture front = handler.getTexture(faces.get("front"));
+			Texture right = handler.getTexture(faces.get("right"));
+			Texture left = handler.getTexture(faces.get("left"));
+			Texture top = handler.getTexture(faces.get("top"));
 			if (width != null && height != null && length != null) {
 				model = new BoxModel(front, right, left, top, width, height, length);
 			}
@@ -67,7 +65,7 @@ public class ModelEntry {
 			}
 			break;
 		case IMAGE:
-			front = handler.getImage(faces.get("front"));
+			front = handler.getTexture(faces.get("front"));
 			if (front == null) {
 				throw new RuntimeException("Image " + faces.get("front") + " not found!");
 			}

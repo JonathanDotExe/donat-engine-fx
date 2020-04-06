@@ -1,6 +1,6 @@
 package at.jojokobi.donatengine.javafx.audio;
 
-import at.jojokobi.donatengine.javafx.RessourceHandler;
+import at.jojokobi.donatengine.javafx.ressources.RessourceHandler;
 import javafx.application.Platform;
 import javafx.scene.media.MediaPlayer;
 

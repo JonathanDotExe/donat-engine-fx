@@ -1,6 +1,7 @@
 package at.jojokobi.donatengine.javafx.rendering;
 
-import at.jojokobi.donatengine.javafx.RessourceHandler;
+import at.jojokobi.donatengine.javafx.rendering.models.RenderModel;
+import at.jojokobi.donatengine.javafx.ressources.RessourceHandler;
 import at.jojokobi.donatengine.objects.Camera;
 import at.jojokobi.donatengine.rendering.ModelShadowRenderData;
 import at.jojokobi.donatengine.util.Vector2D;

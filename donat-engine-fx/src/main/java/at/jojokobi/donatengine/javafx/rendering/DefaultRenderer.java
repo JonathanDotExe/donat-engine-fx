@@ -7,7 +7,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import at.jojokobi.donatengine.javafx.RessourceHandler;
+import at.jojokobi.donatengine.javafx.rendering.models.RenderModel;
+import at.jojokobi.donatengine.javafx.ressources.RessourceHandler;
 import at.jojokobi.donatengine.level.LevelBoundsComponent;
 import at.jojokobi.donatengine.objects.Camera;
 import at.jojokobi.donatengine.objects.GameObject;

@@ -8,7 +8,7 @@ public class ImageRenderer implements DataRenderer<ImageRenderData>{
 
 	@Override
 	public void render(ImageRenderData data, RenderContext ctx) {
-		Image image = ctx.getRessourceHandler().getImage(data.getTag());
+		Image image = ctx.getRessourceHandler().getTexture(data.getTag()).getImage(0);//TDO animated images
 		Vector2D renderPos = ctx.getPerspective().toScreenPosition(ctx.getCam(), data.getPosition().getPosition().clone().multiply(ctx.getPixelsPerMeter())).subtract(image.getWidth()/2, image.getHeight()/2).round();
 		ctx.getCtx().drawImage(image, renderPos.getX(), renderPos.getY());
 	}

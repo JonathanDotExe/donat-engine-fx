@@ -19,7 +19,9 @@ import at.jojokobi.donatengine.javafx.rendering.DefaultRenderer;
 import at.jojokobi.donatengine.javafx.rendering.Renderer;
 import at.jojokobi.donatengine.javafx.ressources.ImageIndex;
 import at.jojokobi.donatengine.javafx.ressources.ModelIndex;
+import at.jojokobi.donatengine.javafx.ressources.RessourceHandler;
 import at.jojokobi.donatengine.javafx.ressources.SoundIndex;
+import at.jojokobi.donatengine.javafx.ressources.StaticTexture;
 import at.jojokobi.donatengine.platform.GamePlatform;
 import at.jojokobi.donatengine.rendering.GameView;
 import javafx.application.Application;
@@ -62,7 +64,7 @@ public abstract class GameApplication extends Application{
 		for (var i : images.getImages().entrySet()) {
 			InputStream in = getRessourceRoot().getResourceAsStream("/" + imagesRoot() + "/" + i.getValue().getPath());
 			if (in != null) {
-				ressourceHandler.putImage(i.getKey(), new Image(in));
+				ressourceHandler.putTexture(i.getKey(), new StaticTexture(new Image(in)));
 				logger.info("Loaded image " + i.getKey() + " from path " + i.getValue().getPath() + "!");
 			}
 			else {

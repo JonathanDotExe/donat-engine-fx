@@ -1,6 +1,6 @@
 package at.jojokobi.donatengine.javafx.rendering;
 
-import at.jojokobi.donatengine.javafx.RessourceHandler;
+import at.jojokobi.donatengine.javafx.ressources.RessourceHandler;
 import at.jojokobi.donatengine.objects.Camera;
 import javafx.scene.canvas.GraphicsContext;
 

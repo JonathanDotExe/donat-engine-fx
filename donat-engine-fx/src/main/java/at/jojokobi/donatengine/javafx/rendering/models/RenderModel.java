@@ -1,11 +1,12 @@
-package at.jojokobi.donatengine.javafx.rendering;
+package at.jojokobi.donatengine.javafx.rendering.models;
 
+import at.jojokobi.donatengine.javafx.rendering.Perspective;
 import at.jojokobi.donatengine.objects.Camera;
 import javafx.scene.canvas.GraphicsContext;
 
 public abstract class RenderModel {
 	
-	public abstract void render (GraphicsContext ctx, Camera cam, Perspective perspective, double x, double y, double z);
+	public abstract void render (GraphicsContext ctx, Camera cam, Perspective perspective, double x, double y, double z, double timer);
 	
 	public abstract double getWidth ();
 	

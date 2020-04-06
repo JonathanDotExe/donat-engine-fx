@@ -2,7 +2,7 @@ package at.jojokobi.donatengine.javafx.rendering;
 
 import java.util.Comparator;
 
-import at.jojokobi.donatengine.javafx.RessourceHandler;
+import at.jojokobi.donatengine.javafx.ressources.RessourceHandler;
 import at.jojokobi.donatengine.objects.Camera;
 import at.jojokobi.donatengine.rendering.RenderData;
 import at.jojokobi.donatengine.util.Vector2D;
