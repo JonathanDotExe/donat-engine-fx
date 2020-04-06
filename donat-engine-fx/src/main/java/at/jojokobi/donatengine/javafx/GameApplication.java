@@ -1,7 +1,9 @@
 package at.jojokobi.donatengine.javafx;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,6 +30,8 @@ import javafx.application.Application;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.image.Image;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.WritableImage;
 import javafx.scene.media.Media;
 import javafx.stage.Stage;
 
@@ -64,7 +68,18 @@ public abstract class GameApplication extends Application{
 		for (var i : images.getImages().entrySet()) {
 			InputStream in = getRessourceRoot().getResourceAsStream("/" + imagesRoot() + "/" + i.getValue().getPath());
 			if (in != null) {
-				ressourceHandler.putTexture(i.getKey(), new StaticTexture(new Image(in)));
+				Image image = new Image(in);
+				if (i.getValue().getFrames() <= 1) {
+					ressourceHandler.putTexture(i.getKey(), new StaticTexture(image));
+				}
+				else {
+					double width = image.getWidth()/i.getValue().getFrames();
+					PixelReader reader = image.getPixelReader();
+					List<Image> frames = new ArrayList<Image>();
+					for (int j = 0; j < i.getValue().getFrames(); j++) {
+						frames.add(new WritableImage(reader, (int) (j * width), 0, (int) width, (int) image.getHeight()));
+					}
+				}
 				logger.info("Loaded image " + i.getKey() + " from path " + i.getValue().getPath() + "!");
 			}
 			else {
