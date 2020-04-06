@@ -19,6 +19,7 @@ import at.jojokobi.donatengine.javafx.audio.JavaFXAudioSystem;
 import at.jojokobi.donatengine.javafx.input.SceneInput;
 import at.jojokobi.donatengine.javafx.rendering.DefaultRenderer;
 import at.jojokobi.donatengine.javafx.rendering.Renderer;
+import at.jojokobi.donatengine.javafx.ressources.AnimatedTexture;
 import at.jojokobi.donatengine.javafx.ressources.ImageIndex;
 import at.jojokobi.donatengine.javafx.ressources.ModelIndex;
 import at.jojokobi.donatengine.javafx.ressources.RessourceHandler;
@@ -79,6 +80,7 @@ public abstract class GameApplication extends Application{
 					for (int j = 0; j < i.getValue().getFrames(); j++) {
 						frames.add(new WritableImage(reader, (int) (j * width), 0, (int) width, (int) image.getHeight()));
 					}
+					ressourceHandler.putTexture(i.getKey(), new AnimatedTexture(i.getValue().getFrameDuration(), frames));
 				}
 				logger.info("Loaded image " + i.getKey() + " from path " + i.getValue().getPath() + "!");
 			}
