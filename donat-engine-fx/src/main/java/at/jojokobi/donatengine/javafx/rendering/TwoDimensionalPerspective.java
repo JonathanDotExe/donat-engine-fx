@@ -27,7 +27,7 @@ public class TwoDimensionalPerspective implements Perspective{
 
 	@Override
 	public Comparator<RenderData> getComparator(Camera cam, RessourceHandler ressourceHandler, double pixelsPerMeter) {
-		if (((Math.abs(cam.getRotationX()) + 45) % 180) > 90) {
+		/*if (((Math.abs(cam.getRotationX()) + 45) % 180) > 90) {
 			return new Comparator<RenderData>() {
 				@Override
 				public int compare(RenderData d1, RenderData d2) {
@@ -55,7 +55,8 @@ public class TwoDimensionalPerspective implements Perspective{
 					return cmp;
 				}
 			};
-		}
+		}*/
+		return new DataComparator(cam, ressourceHandler, pixelsPerMeter);
 	}
 
 }
