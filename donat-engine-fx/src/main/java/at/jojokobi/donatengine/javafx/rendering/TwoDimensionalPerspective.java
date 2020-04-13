@@ -56,7 +56,23 @@ public class TwoDimensionalPerspective implements Perspective{
 				}
 			};
 		}*/
-		return new DataComparator(cam, ressourceHandler, pixelsPerMeter);
+		//return new DataComparator(cam, ressourceHandler, pixelsPerMeter);
+		return new Comparator<RenderData>() {
+			@Override
+			public int compare(RenderData d1, RenderData d2) {
+				RenderMetaData o1 = DefaultRenderer.getMetaData(d1, ressourceHandler, pixelsPerMeter);
+				RenderMetaData o2 = DefaultRenderer.getMetaData(d2, ressourceHandler, pixelsPerMeter);
+				
+				int cmp = Double.compare(o1.getPriority(), o2.getPriority());
+				if (cmp == 0) {
+					cmp = Double.compare(o1.getY() + o1.getHeight(), o2.getY() + o2.getHeight());
+				}
+				if (cmp == 0) {
+					cmp = Double.compare(o1.getZ() + o1.getLength(), o2.getZ() + o2.getLength());
+				}
+				return cmp;
+			}
+		};
 	}
 
 }
