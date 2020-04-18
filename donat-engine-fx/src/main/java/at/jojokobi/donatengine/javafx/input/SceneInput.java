@@ -17,6 +17,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
+//TODO Thread safety
 public class SceneInput implements Input{
 
 	private Map<String, KeyCode> keyBindings = new HashMap<>();
@@ -26,6 +27,7 @@ public class SceneInput implements Input{
 	private Set<KeyCode> keys = new HashSet<>();
 	private Set<MouseButton> buttons = new HashSet<>();
 	private Set<String> pressed = new HashSet<>();
+	private Set<String> released = new HashSet<>();
 	
 	private Map<String, Boolean> changedButtons = new HashMap<>();
 	
@@ -78,6 +80,7 @@ public class SceneInput implements Input{
 				for (String string : keyBindings.keySet()) {
 					if (keyBindings.get(string).equals(event.getCode())) {
 						changedButtons.put(string, false);
+						released.add(string);
 					}
 				}
 			}
@@ -89,6 +92,7 @@ public class SceneInput implements Input{
 				for (String string : mouseButtonBindings.keySet()) {
 					if (mouseButtonBindings.get(string).equals(event.getButton())) {
 						changedButtons.put(string, true);
+						pressed.add(string);
 					}
 				}
 			}
@@ -100,6 +104,7 @@ public class SceneInput implements Input{
 				for (String string : mouseButtonBindings.keySet()) {
 					if (mouseButtonBindings.get(string).equals(event.getButton())) {
 						changedButtons.put(string, true);
+						released.add(string);
 					}
 				}
 			}
@@ -182,6 +187,7 @@ public class SceneInput implements Input{
 	public void updateBuffers() {
 		typedChars.clear();
 		pressed.clear();
+		released.clear();
 	}
 
 	@Override
@@ -199,6 +205,11 @@ public class SceneInput implements Input{
 
 	public Map<String, Axis> getAxisBindings() {
 		return axisBindings;
+	}
+
+	@Override
+	public boolean isReleased(String button) {
+		return released.contains(button);
 	}
 	
 }
