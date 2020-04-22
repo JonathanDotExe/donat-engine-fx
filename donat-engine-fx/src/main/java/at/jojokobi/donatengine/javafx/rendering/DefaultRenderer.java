@@ -17,6 +17,8 @@ import at.jojokobi.donatengine.rendering.ModelRenderData;
 import at.jojokobi.donatengine.rendering.PositionedRenderData;
 import at.jojokobi.donatengine.rendering.RenderData;
 import at.jojokobi.donatengine.rendering.ScreenPositonedRenderData;
+import at.jojokobi.donatengine.util.Vector2D;
+import at.jojokobi.donatengine.util.Vector3D;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -221,6 +223,12 @@ public class DefaultRenderer implements Renderer {
 				cam.setZ(bounds.getPos().getZ() - cam.getViewHeight()/pixelsPerMeter/2 + bounds.getSize().getZ());
 			}
 		}
+	}
+
+	@Override
+	public Vector2D getScreenPosition(Vector3D pos, Camera cam) {
+		Perspective perspective = getPerspective(cam);
+		return perspective.toScreenPosition(cam, pos);
 	}
 
 }
