@@ -36,4 +36,16 @@ public class RessourceHandler {
 		models.put(id, model);
 	}
 
+	public Map<String, Media> getMedias() {
+		return medias;
+	}
+
+	public Map<String, Texture> getTextures() {
+		return textures;
+	}
+
+	public Map<String, RenderModel> getModels() {
+		return models;
+	}
+
 }
