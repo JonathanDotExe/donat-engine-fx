@@ -58,10 +58,10 @@ public class ModelEntry {
 			Texture left = handler.getTexture(faces.get("left"));
 			Texture top = handler.getTexture(faces.get("top"));
 			if (width != null && height != null && length != null) {
-				model = new BoxModel(front, right, left, top, width, height, length);
+				model = new BoxModel(front == null ? new NullTexture() : front, right == null ? new NullTexture() : right, left == null ? new NullTexture() : left, top == null ? new NullTexture() : top, width, height, length);
 			}
 			else {
-				model = new BoxModel(front, right, left, top);
+				model = new BoxModel(front == null ? new NullTexture() : front, right == null ? new NullTexture() : right, left == null ? new NullTexture() : left, top == null ? new NullTexture() : top);
 			}
 			break;
 		case IMAGE:
